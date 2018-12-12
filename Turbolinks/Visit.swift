@@ -142,14 +142,16 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     fileprivate var navigation: WKNavigation?
 
     override fileprivate func startVisit() {
-        webView.navigationDelegate = self
-        webView.pageLoadDelegate = self
-
-        let request = URLRequest(url: location)
-        navigation = webView.load(request)
-
-        delegate?.visitDidStart(self)
-        startRequest()
+        DispatchQueue.main.async {
+            self.webView.navigationDelegate = self
+            self.webView.pageLoadDelegate = self
+            
+            let request = URLRequest(url: self.location)
+            self.navigation = self.webView.load(request)
+            
+            self.delegate?.visitDidStart(self)
+            self.startRequest()
+        }
     }
 
     override fileprivate func cancelVisit() {

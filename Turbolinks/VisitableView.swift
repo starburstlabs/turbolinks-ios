@@ -146,10 +146,12 @@ open class VisitableView: UIView {
     }
 
     open func showScreenshot() {
-        if !isShowingScreenshot && !isRefreshing {
-            addSubview(screenshotContainerView)
-            addFillConstraints(forView: screenshotContainerView)
-            showOrHideWebView()
+        DispatchQueue.main.async {
+            if !self.isShowingScreenshot && !self.isRefreshing {
+                self.addSubview(self.screenshotContainerView)
+                self.addFillConstraints(forView: self.screenshotContainerView)
+                self.showOrHideWebView()
+            }
         }
     }
 
