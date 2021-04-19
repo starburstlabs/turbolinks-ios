@@ -78,13 +78,17 @@ open class Session: NSObject {
 
         visitable.visitableDelegate = self
 
+        if refreshing {
+            visitable.visitableURL = webView.url
+        }
+
         let visit: Visit
 
         if initialized {
             visit = JavaScriptVisit(visitable: visitable, action: action, webView: _webView)
             visit.restorationIdentifier = restorationIdentifierForVisitable(visitable)
         } else {
-            visit = ColdBootVisit(visitable: visitable, action: action, webView: _webView)
+            visit = ColdBootVisit(visitable: visitable, action: refreshing ? .Replace : action, webView: _webView)
         }
 
         currentVisit?.cancel()
