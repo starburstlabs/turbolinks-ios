@@ -1,6 +1,6 @@
 import WebKit
 
-protocol VisitDelegate: class {
+protocol VisitDelegate: AnyObject {
     func visitDidInitializeWebView(_ visit: Visit)
 
     func visitWillStart(_ visit: Visit)
@@ -140,6 +140,7 @@ class Visit: NSObject {
 
 class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     fileprivate var navigation: WKNavigation?
+    fileprivate var responseReceived = false
 
     override fileprivate func startVisit() {
         webView.navigationDelegate = self
@@ -153,19 +154,24 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     }
 
     override fileprivate func cancelVisit() {
-        removeNavigationDelegate()
+        cleanup()
         webView.stopLoading()
         finishRequest()
     }
 
     override fileprivate func completeVisit() {
-        removeNavigationDelegate()
+        cleanup()
         delegate?.visitDidInitializeWebView(self)
     }
 
     override fileprivate func failVisit() {
-        removeNavigationDelegate()
+        cleanup()
         finishRequest()
+    }
+
+    fileprivate func cleanup() {
+        removeNavigationDelegate()
+        clearRequest()
     }
 
     fileprivate func removeNavigationDelegate() {
@@ -174,7 +180,33 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
         }
     }
 
+    fileprivate func clearRequest() {
+        navigation = nil
+        responseReceived = false
+    }
+
+    fileprivate func checkForRequestResponse(_ navigation: WKNavigation) {
+        if navigation === self.navigation && !responseReceived {
+            restartRequest()
+        }
+    }
+
+    fileprivate func restartRequest() {
+        cancel()
+        state = .initialized
+        requestStarted = false
+        start()
+    }
+
     // MARK: WKNavigationDelegate
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        guard navigation === self.navigation else { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.checkForRequestResponse(navigation)
+        }
+    }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if navigation === self.navigation {
@@ -187,7 +219,7 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
         if navigationAction.navigationType == .linkActivated {
             decisionHandler(.cancel)
             if let URL = navigationAction.request.url {
-                UIApplication.shared.openURL(URL)
+                UIApplication.shared.open(URL)
             }
         } else {
             decisionHandler(.allow)
@@ -195,6 +227,8 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        responseReceived = true
+
         if let httpResponse = navigationResponse.response as? HTTPURLResponse {
             if isGoodResponse(httpResponse) {
                 self.delegate?.visitWillLoadResponse(self)
