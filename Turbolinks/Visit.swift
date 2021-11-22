@@ -118,6 +118,7 @@ class Visit: NSObject {
 
     fileprivate var requestStarted = false
     fileprivate var requestFinished = false
+    fileprivate var delayedResponseCheck: DispatchWorkItem?
 
     fileprivate func startRequest() {
         if !requestStarted {
@@ -198,14 +199,21 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
         start()
     }
 
+    fileprivate func onResponseReceived() {
+        responseReceived = true
+        delayedResponseCheck?.cancel()
+        delayedResponseCheck = nil
+    }
+
     // MARK: WKNavigationDelegate
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         guard navigation === self.navigation else { return }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        delayedResponseCheck = DispatchWorkItem(block: {
             self.checkForRequestResponse(navigation)
-        }
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: delayedResponseCheck!)
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -227,7 +235,7 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        responseReceived = true
+        onResponseReceived()
 
         if let httpResponse = navigationResponse.response as? HTTPURLResponse {
             if isGoodResponse(httpResponse) {
@@ -250,6 +258,8 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        onResponseReceived()
+
         if navigation === self.navigation {
             fail {
                 let error = NSError(code: .networkFailure, error: error as NSError)
@@ -259,6 +269,8 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        onResponseReceived()
+
         if navigation === self.navigation {
             fail {
                 let error = NSError(code: .networkFailure, error: error as NSError)
