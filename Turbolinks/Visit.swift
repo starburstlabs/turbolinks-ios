@@ -142,12 +142,20 @@ class Visit: NSObject {
 class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     fileprivate var navigation: WKNavigation?
     fileprivate var responseReceived = false
+    fileprivate var httpMethod = "GET"
+
+    func destroy(_ url : String) {
+        self.location = URL(string: url)!
+        self.httpMethod = "DELETE"
+        start()
+    }
 
     override fileprivate func startVisit() {
         webView.navigationDelegate = self
         webView.pageLoadDelegate = self
 
-        let request = URLRequest(url: location)
+        var request = URLRequest(url: location)
+        request.httpMethod = httpMethod
         navigation = webView.load(request)
 
         delegate?.visitDidStart(self)
@@ -213,7 +221,7 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
         delayedResponseCheck = DispatchWorkItem(block: {
             self.checkForRequestResponse(navigation)
         })
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: delayedResponseCheck!)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: delayedResponseCheck!)
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
