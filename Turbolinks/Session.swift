@@ -73,6 +73,18 @@ open class Session: NSObject {
         visitVisitable(visitable, action: .Advance)
     }
 
+    open func destroy(_ url: String) {
+        guard let visitable = topmostVisitable else { return }
+
+        visitable.visitableDelegate = self
+        let visit = ColdBootVisit(visitable: visitable, action: .Replace, webView: _webView)
+        currentVisit?.cancel()
+        currentVisit = visit
+
+        visit.delegate = self
+        visit.destroy(url)
+    }
+
     fileprivate func visitVisitable(_ visitable: Visitable, action: Action) {
         guard visitable.visitableURL != nil else { return }
 
