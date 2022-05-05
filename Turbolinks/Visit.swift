@@ -286,6 +286,10 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
             }
         }
     }
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        webView.reload()
+    }
 
     // MARK: WebViewPageLoadDelegate
 
