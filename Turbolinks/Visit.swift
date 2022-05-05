@@ -383,8 +383,4 @@ class JavaScriptVisit: Visit, WebViewVisitDelegate {
             complete()
         }
     }
-    
-    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        webView.reload()
-    }
 }
