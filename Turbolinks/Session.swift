@@ -226,6 +226,10 @@ extension Session: VisitDelegate {
             visit.visitable.visitableDidRefresh()
         }
     }
+    
+    func visitDidTerminate(_ visit: Visit) {
+        reload()
+    }
 }
 
 extension Session: VisitableDelegate {

@@ -15,6 +15,8 @@ protocol VisitDelegate: AnyObject {
     func visitRequestDidStart(_ visit: Visit)
     func visit(_ visit: Visit, requestDidFailWithError error: NSError)
     func visitRequestDidFinish(_ visit: Visit)
+    
+    func visitDidTerminate(_ visit: Visit)
 }
 
 enum VisitState {
@@ -285,6 +287,10 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
                 self.delegate?.visit(self, requestDidFailWithError: error)
             }
         }
+    }
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        delegate?.visitDidTerminate(self)
     }
 
     // MARK: WebViewPageLoadDelegate
