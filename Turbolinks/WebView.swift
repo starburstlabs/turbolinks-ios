@@ -40,6 +40,11 @@ class WebView: WKWebView {
         if #available(iOS 11, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
         }
+        #if DEBUG
+          if #available(iOS 16.4, *) {
+            isInspectable = true
+          }
+        #endif
     }
     
     required init?(coder: NSCoder) {
