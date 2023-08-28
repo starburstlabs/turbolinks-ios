@@ -2,73 +2,73 @@ import UIKit
 import WebKit
 
 public protocol VisitableDelegate: AnyObject {
-    func visitableViewWillAppear(_ visitable: Visitable)
-    func visitableViewDidAppear(_ visitable: Visitable)
-    func visitableDidRequestReload(_ visitable: Visitable)
-    func visitableDidRequestRefresh(_ visitable: Visitable)
+  func visitableViewWillAppear(_ visitable: Visitable)
+  func visitableViewDidAppear(_ visitable: Visitable)
+  func visitableDidRequestReload(_ visitable: Visitable)
+  func visitableDidRequestRefresh(_ visitable: Visitable)
 }
 
 public protocol Visitable: AnyObject {
-    var visitableDelegate: VisitableDelegate? { get set } 
-    var visitableView: VisitableView! { get }
-    var visitableURL: URL! { get }
-    func visitableDidRender()
+  var visitableDelegate: VisitableDelegate? { get set }
+  var visitableView: VisitableView! { get }
+  var visitableURL: URL! { get }
+  func visitableDidRender()
 }
 
 extension Visitable {
-    public var visitableViewController: UIViewController {
-        return self as! UIViewController
-    }
+  public var visitableViewController: UIViewController {
+    return self as! UIViewController
+  }
 
-    public func visitableDidRender() {
-        visitableViewController.title = visitableView.webView?.title
-    }
+  public func visitableDidRender() {
+    visitableViewController.title = visitableView.webView?.title
+  }
 
-    public func reloadVisitable() {
-        visitableDelegate?.visitableDidRequestReload(self)
-    }
+  public func reloadVisitable() {
+    visitableDelegate?.visitableDidRequestReload(self)
+  }
 
-    func activateVisitableWebView(_ webView: WKWebView) {
-        visitableView.activateWebView(webView, forVisitable: self)
-    }
+  func activateVisitableWebView(_ webView: WKWebView) {
+    visitableView.activateWebView(webView, forVisitable: self)
+  }
 
-    func deactivateVisitableWebView() {
-        visitableView.deactivateWebView()
-    }
+  func deactivateVisitableWebView() {
+    visitableView.deactivateWebView()
+  }
 
-    func showVisitableActivityIndicator() {
-        visitableView.showActivityIndicator()
-    }
+  func showVisitableActivityIndicator() {
+    visitableView.showActivityIndicator()
+  }
 
-    func hideVisitableActivityIndicator() {
-        visitableView.hideActivityIndicator()
-    }
+  func hideVisitableActivityIndicator() {
+    visitableView.hideActivityIndicator()
+  }
 
-    func updateVisitableScreenshot() {
-        visitableView.updateScreenshot()
-    }
+  func updateVisitableScreenshot() {
+    visitableView.updateScreenshot()
+  }
 
-    func showVisitableScreenshot() {
-        visitableView.showScreenshot()
-    }
+  func showVisitableScreenshot() {
+    visitableView.showScreenshot()
+  }
 
-    func hideVisitableScreenshot() {
-        visitableView.hideScreenshot()
-    }
+  func hideVisitableScreenshot() {
+    visitableView.hideScreenshot()
+  }
 
-    func clearVisitableScreenshot() {
-        visitableView.clearScreenshot()
-    }
+  func clearVisitableScreenshot() {
+    visitableView.clearScreenshot()
+  }
 
-    func visitableWillRefresh() {
-        visitableView.refreshControl.beginRefreshing()
-    }
+  func visitableWillRefresh() {
+    visitableView.refreshControl.beginRefreshing()
+  }
 
-    func visitableDidRefresh() {
-        visitableView.refreshControl.endRefreshing()
-    }
+  func visitableDidRefresh() {
+    visitableView.refreshControl.endRefreshing()
+  }
 
-    func visitableViewDidRequestRefresh() {
-        visitableDelegate?.visitableDidRequestRefresh(self)
-    }
+  func visitableViewDidRequestRefresh() {
+    visitableDelegate?.visitableDidRequestRefresh(self)
+  }
 }
