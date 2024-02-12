@@ -158,6 +158,7 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
 
     var request = URLRequest(url: location)
     request.httpMethod = httpMethod
+    request.addValue("true", forHTTPHeaderField: "ngrok-skip-browser-warning")
     navigation = webView.load(request)
 
     delegate?.visitDidStart(self)
