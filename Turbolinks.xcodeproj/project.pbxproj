@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AE72C842B98ED5500F8049F /* Wealthbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE72C832B98ED5500F8049F /* Wealthbox.framework */; };
 		1F8FC6B31B55A37400A781C8 /* WebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 1F8FC6AE1B55A37400A781C8 /* WebView.js */; };
 		1F8FC6B71B55A37400A781C8 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8FC6B01B55A37400A781C8 /* Session.swift */; };
 		1F8FC6B91B55A37400A781C8 /* Visit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8FC6B11B55A37400A781C8 /* Visit.swift */; };
@@ -31,21 +32,8 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		0A1975042B978E0200EFD002 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		0A9CF5B12B97827A006DF41E /* Wealthbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Wealthbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AE72C832B98ED5500F8049F /* Wealthbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Wealthbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F8FC6AE1B55A37400A781C8 /* WebView.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WebView.js; sourceTree = "<group>"; };
 		1F8FC6B01B55A37400A781C8 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		1F8FC6B11B55A37400A781C8 /* Visit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Visit.swift; sourceTree = "<group>"; };
@@ -68,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AE72C842B98ED5500F8049F /* Wealthbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,10 +71,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0A9CF5B02B97827A006DF41E /* Frameworks */ = {
+		0A267BF72B98E85100C009FB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A9CF5B12B97827A006DF41E /* Wealthbox.framework */,
+				0AE72C832B98ED5500F8049F /* Wealthbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -96,7 +85,7 @@
 				1FC167F11B55A14900AA6F43 /* Turbolinks */,
 				92DF45081C80F7970064E606 /* Tests */,
 				1FC167F01B55A14900AA6F43 /* Products */,
-				0A9CF5B02B97827A006DF41E /* Frameworks */,
+				0A267BF72B98E85100C009FB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,7 +155,6 @@
 				1FC167EB1B55A14900AA6F43 /* Frameworks */,
 				1FC167EC1B55A14900AA6F43 /* Headers */,
 				1FC167ED1B55A14900AA6F43 /* Resources */,
-				0A1975042B978E0200EFD002 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
