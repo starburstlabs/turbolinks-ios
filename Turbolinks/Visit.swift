@@ -1,3 +1,4 @@
+import Wealthbox
 import WebKit
 
 protocol VisitDelegate: AnyObject {
@@ -156,9 +157,7 @@ class ColdBootVisit: Visit, WKNavigationDelegate, WebViewPageLoadDelegate {
     webView.navigationDelegate = self
     webView.pageLoadDelegate = self
 
-    var request = URLRequest(url: location)
-    request.httpMethod = httpMethod
-    navigation = webView.load(request)
+    navigation = webView.load(WealthboxRequest.create(url: location, httpMethod: httpMethod))
 
     delegate?.visitDidStart(self)
     startRequest()
