@@ -114,6 +114,17 @@ open class Session: NSObject {
     }
   }
 
+  /// Re-visits the current page for login without setting topmostVisit.
+  /// Unlike reload(), this clears topmostVisit so that visitableViewWillAppear
+  /// won't trigger a spurious Restore visit when the auth controller is dismissed.
+  open func reloadForLogin() {
+    if let visitable = topmostVisitable {
+      initialized = false
+      visit(visitable)
+      topmostVisit = nil
+    }
+  }
+
   public func cancelCurrentVisit() {
     if let currentVisit = currentVisit {
       currentVisit.cancel()
